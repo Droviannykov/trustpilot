@@ -1,4 +1,5 @@
 .env
+.claude/
 google_credentials.json
 pending_contacts.json
 __pycache__/
