@@ -2,6 +2,14 @@
 
 Automated Trustpilot review management for Epica Beauty. Both scripts run unattended on a schedule (e.g. hourly via AWS). The only manual step is entering refund amounts in the Google Sheet.
 
+## What it does
+
+1. **Replies to every unanswered review** — positive reviews get a thank-you, negative reviews get an apology with a support email
+2. **Collects reviewer emails** — either directly from the review or by requesting it through Trustpilot's Find Reviewer
+3. **Tracks negative reviewers in a Google Sheet** — the operator reviews the list, cancels subscriptions, and enters the refund amount
+4. **Sends a refund confirmation email** — automatically, once the refund amount appears in the sheet
+5. **Follows up after 1 day** — if the reviewer hasn't replied, sends a follow-up in the same email thread
+
 ## Files
 
 | File | Purpose |
