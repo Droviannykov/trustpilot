@@ -188,7 +188,11 @@ def main():
         print(f"Review : {body}")
         print(f"Reply  : {reply_text}")
 
-        # Post the template reply automatically
+        # Add review to the sheet, then post the reply
+        review_date = review.get("createdAt", "")[:10]
+        source = "Organic" if review.get("invitation") is None else "Invited"
+        sheets.add_review(review_id, review_date, author, stars, title, body, source)
+
         try:
             post_reply(token, review_id, reply_text)
             print(f"Reply posted for review {review_id}.")

@@ -111,6 +111,18 @@ def update_cells(review_id, updates: dict):
         print(f"  [Sheets] Update failed: {e}")
 
 
+def add_review(review_id, date, author, stars, title, review_text, source):
+    try:
+        ws = _get_worksheet()
+        if _find_row(ws, review_id):
+            return  # already exists
+        link = f"https://www.trustpilot.com/reviews/{review_id}"
+        row = [review_id, date, author, stars, title, review_text, link, source]
+        ws.append_row(row)
+    except Exception as e:
+        print(f"  [Sheets] Failed to add review: {e}")
+
+
 def mark_reply_posted(review_id):
     update_cells(review_id, {COL_REPLY_POSTED: "Yes"})
 
