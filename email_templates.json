@@ -1,0 +1,10 @@
+{
+  "refund_confirmation": {
+    "subject": "{author}, your refund for the makeup app is on the way",
+    "body": "Hi {author},\n\nI'm Andrea from Epica Beauty – the CEO for the makeup app you've just reviewed.\n\nFirst off, I just want to say I'm really sorry about the poor customer service you experienced. I saw your review on Trustpilot, and I can completely understand how frustrating that must have been.\n\nTo make this right, I've already processed a refund for you. The money (${refund_amount}) should be back in your account within 5-10 business days (though it's usually faster!).\n\nI've also spoken with the support team about this — it's clear we dropped the ball, and this isn't how we want to treat our customers.\n\nIf you feel like updating your review once you receive the refund, here's the link: {review_link}\n\nNo pressure at all, but it'd mean the world to us.\n\nIf you have any further questions or need assistance, I'm here for you. Once again, I'm sorry that this happened, and I hope you have a wonderful day!\n\nAll the best,\nAndrea\nEpica Beauty"
+  },
+  "follow_up_refund": {
+    "subject": "Just checking in — your refund from Epica Beauty",
+    "body": "Hi {author},\n\nI hope you've been doing well! I just wanted to follow up and see if you received the refund I processed for you. Please let me know if there are any issues; I'm here to help if you need anything further.\n\nIf you did receive the refund, I'd also appreciate it if you could update or consider deleting your Trustpilot review at your convenience. Here's the link: {review_link}\n\nOf course, it's entirely up to you — no pressure, but it would mean a lot to us.\n\nThank you again for your time, and please let me know if there's anything else I can do to assist.\n\nTake care,\nAndrea"
+  }
+}
