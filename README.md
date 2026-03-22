@@ -10,11 +10,8 @@ Automated Trustpilot review management for Epica Beauty. Both scripts run unatte
 | `check_pending_contacts.py` | Poll Find Reviewer requests, send refund emails, send follow-ups |
 | `reply_templates.json` | Public reply templates posted on Trustpilot (editable without code changes) |
 | `email_templates.json` | Email templates: refund confirmation and follow-up refund |
-| `pending_contacts.json` | Auto-generated; tracks pending/resolved Find Reviewer requests and email state |
 | `sheets.py` | Google Sheets integration — updates tracking spreadsheet and Refunds tab |
 | `logic.md` | Business logic overview |
-| `.env` | API credentials (never commit) |
-| `google_credentials.json` | Google service account credentials (never commit) |
 
 ## Setup
 
