@@ -1,5 +1,6 @@
 .env
 .claude/
+mock/
 google_credentials.json
 pending_contacts.json
 __pycache__/
