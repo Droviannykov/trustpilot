@@ -11,11 +11,13 @@ Automated Trustpilot review management for Epica Beauty. Both scripts run unatte
 | --------------------------- | ------------------------------------------------------------------------------ |
 | `trustpilot_replies.py`        | Auto-reply to unanswered reviews + handle negative review flow                 |
 | `check_pending_contacts.py`    | Poll Find Reviewer requests, send refund emails, send follow-ups               |
+| `generate_reply.py`            | AI reply generator using Claude API with few-shot examples and style rotation   |
 | `config.py`                    | Loads `business_config.json`, provides helpers for templates and business vars  |
 | `business_config.json`         | All business-specific text: templates, names, emails (never commit)            |
 | `business_config.example.json` | Committed example config — copy to `business_config.json` for new deployments  |
 | `pending_contacts.json`        | Auto-generated; tracks pending/resolved Find Reviewer requests and email state |
 | `sheets.py`                    | Google Sheets integration — updates tracking spreadsheet and Refunds tab       |
+| `replies.md`                   | Reference file with AI-generated replies for all existing reviews              |
 | `google_credentials.json`      | Google service account credentials (never commit)                              |
 | `.env`                         | API credentials (never commit)                                                 |
 | `.gitignore`                   | Excludes `.env`, `business_config.json`, and other secrets from git            |
@@ -38,12 +40,14 @@ WORKMAIL_IMAP_PORT=993
 
 GOOGLE_SHEET_ID=1EeAo3DEBJUf9WH66SiTdzGih88v4XByzkFg1JLByh8E
 GOOGLE_CREDS_FILE=google_credentials.json
+
+ANTHROPIC_API_KEY=sk-ant-api03-...  — Claude API key for AI-generated replies
 ```
 
 ## Running
 
 ```bash
-pip install requests python-dotenv gspread google-auth certifi
+pip install requests python-dotenv gspread google-auth certifi anthropic
 python3 trustpilot_replies.py          # auto-reply to all unanswered reviews
 python3 trustpilot_replies.py --test   # process oldest unanswered review only
 
@@ -61,9 +65,12 @@ Both scripts are non-interactive and designed to run on a schedule.
 1. **Auth** — exchanges API key + secret for an OAuth 2.0 Bearer token via client credentials grant.
 2. **Fetch reviews** — `GET /v1/private/business-units/{id}/reviews?responded=false`, sorted oldest first.
 3. `**--test` flag** — limits to the first (oldest) review only.
-4. **Auto-reply** — for each review, posts the matching template reply automatically (no prompts):
-  - **4–5 stars** — thank the customer, invite questions at [trust@epica-beauty.com](mailto:trust@epica-beauty.com)
-  - **1–3 stars** — apologise, ask them to email [trust@epica-beauty.com](mailto:trust@epica-beauty.com)
+4. **Auto-reply** — for each review, generates a personalized reply using Claude API (`generate_reply.py`):
+  - Uses a system prompt with few-shot examples from real reviews
+  - Randomly selects one of 7 writing styles per reply (conversational, calm, energetic, direct, storytelling, playful, confident) for variety
+  - **4–5 stars** — reacts to specifics, invites questions at support email
+  - **1–3 stars** — empathizes with complaint, directs to email support as the solution
+  - Falls back to template replies from `business_config.json` if Claude API fails
 5. **Negative review handling** (1–3 stars), after posting the reply:
   - **Case A: `referralEmail` present** — adds reviewer to the "Refunds" sheet tab for manual processing.
   - **Case B: no email** — checks `findReviewer.isEligible`. If eligible, submits a Find Reviewer request via Trustpilot and saves to `pending_contacts.json`. If not eligible, no further action.
@@ -148,7 +155,7 @@ Uses a Google service account (`google_credentials.json`). Sheet ID is in `.env`
 
 ---
 
-## Email Templates (`email_templates.json`)
+## Email Templates (`business_config.json`)
 
 Exactly **2 templates**:
 
@@ -215,5 +222,6 @@ Exactly **2 templates**:
 - `findReviewer.isEligible: true` occasionally appears on positive (5-star) reviews, but the API returns an error when submitting a request for them. Find Reviewer only works reliably for negative (1–3 star) reviews.
 - **Find Reviewer `consumerResponse`** is an **object** (not a string): `{"email": "...", "name": null, ...}`. Extract `.email` from it.
 - **Find Reviewer status** can be `"Complete"` (not just `"Accepted"`) when the reviewer has shared their details. Code must handle both.
-- The `subject` field in `email_templates.json` supports `{author}` — it is formatted at send time via `template["subject"].format(author=author)`, not hardcoded.
+- The `subject` field in `business_config.json` email templates supports `{author}` — it is formatted at send time via `template["subject"].format(author=author)`, not hardcoded.
+- **Deleting replies via API**: `DELETE /v1/private/reviews/{reviewId}/reply` requires auth header only. Do NOT send `Content-Type: application/json` on DELETE requests or the API returns 400.
 
