@@ -18,6 +18,7 @@ import requests
 from dotenv import load_dotenv
 import sheets
 import config
+import generate_reply as ai_reply
 
 # Load credentials from .env file
 load_dotenv()
@@ -161,7 +162,7 @@ def main():
         author = review.get("consumer", {}).get("displayName", "Unknown")
         title = review.get("title", "(no title)")
         body = review.get("text", "(no body)")
-        reply_text = config.get_reply_text(stars)
+        reply_text = ai_reply.generate_reply(author, stars, title, body)
 
         print("=" * 60)
         print(f"Author : {author}")
