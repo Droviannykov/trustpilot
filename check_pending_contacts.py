@@ -22,6 +22,7 @@ from email.utils import make_msgid
 import requests
 from dotenv import load_dotenv
 import sheets
+import config
 
 # Load credentials from .env file
 load_dotenv()
@@ -39,7 +40,6 @@ IMAP_HOST = os.getenv("WORKMAIL_IMAP_HOST")
 IMAP_PORT = int(os.getenv("WORKMAIL_IMAP_PORT", 993))
 
 PENDING_CONTACTS_FILE = os.path.join(os.path.dirname(__file__), "pending_contacts.json")
-EMAIL_TEMPLATES_FILE = os.path.join(os.path.dirname(__file__), "email_templates.json")
 
 
 def get_access_token():
@@ -83,15 +83,12 @@ def find_request_status(review_data, request_id):
 def send_refund_email(to_email, author, review_id, refund_amount):
     # Compose and send a refund confirmation email using the "refund_confirmation" template.
     # Returns the Message-ID so it can be stored for follow-up threading.
-    with open(EMAIL_TEMPLATES_FILE) as f:
-        templates = json.load(f)
-
-    template = templates["refund_confirmation"]
+    template = config.get_email_template("refund_confirmation")
     review_link = f"https://www.trustpilot.com/reviews/{review_id}"
     body = template["body"].format(author=author, refund_amount=refund_amount, review_link=review_link)
     subject = template["subject"].format(author=author)
 
-    msg_id = make_msgid(domain="epica-beauty.com")
+    msg_id = make_msgid(domain=config.get_email_domain())
     msg = MIMEMultipart()
     msg["From"] = SMTP_USERNAME
     msg["To"] = to_email
@@ -122,10 +119,7 @@ def send_follow_up_email(to_email, author, review_id=None, refund_amount=None, i
     # Send a follow-up to a reviewer who hasn't replied after 1 day.
     # If in_reply_to is provided (the Message-ID of the original email), the follow-up
     # is sent as a reply in the same thread using the original subject.
-    with open(EMAIL_TEMPLATES_FILE) as f:
-        templates = json.load(f)
-
-    template = templates["follow_up_refund"]
+    template = config.get_email_template("follow_up_refund")
     review_link = f"https://www.trustpilot.com/reviews/{review_id}"
     body = template["body"].format(author=author, review_link=review_link)
 

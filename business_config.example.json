@@ -1,0 +1,29 @@
+{
+  "business_name": "Epica Beauty",
+  "product_description": "the makeup app",
+  "support_email": "trust@epica-beauty.com",
+  "email_domain": "epica-beauty.com",
+  "sender_name": "Andrea",
+  "sender_title": "the CEO",
+  "find_reviewer_message": "Hi, we're sorry to hear about your experience with {business_name}. We'd love to reach out directly to make things right — would you be willing to share your contact details with us?",
+  "reply_templates": {
+    "positive": {
+      "stars": [4, 5],
+      "text": "Thank you so much for your kind review! We're thrilled to hear you had a great experience. If you ever have any questions, feel free to reach out to us at {support_email} — we're always happy to help!"
+    },
+    "negative": {
+      "stars": [1, 2, 3],
+      "text": "Thank you for taking the time to share your feedback. We're sorry to hear your experience didn't meet your expectations. Please email us at {support_email} and our support team will do their best to resolve this for you."
+    }
+  },
+  "email_templates": {
+    "refund_confirmation": {
+      "subject": "{author}, your refund for {product_description} is on the way",
+      "body": "Hi {author},\n\nI'm {sender_name} from {business_name} – {sender_title} for {product_description} you've just reviewed.\n\nFirst off, I just want to say I'm really sorry about the poor customer service you experienced. I saw your review on Trustpilot, and I can completely understand how frustrating that must have been.\n\nTo make this right, I've already processed a refund for you. The money (${refund_amount}) should be back in your account within 5-10 business days (though it's usually faster!).\n\nI've also spoken with the support team about this — it's clear we dropped the ball, and this isn't how we want to treat our customers.\n\nIf you feel like updating your review once you receive the refund, here's the link: {review_link}\n\nNo pressure at all, but it'd mean the world to us.\n\nIf you have any further questions or need assistance, I'm here for you. Once again, I'm sorry that this happened, and I hope you have a wonderful day!\n\nAll the best,\n{sender_name}\n{business_name}"
+    },
+    "follow_up_refund": {
+      "subject": "Just checking in — your refund from {business_name}",
+      "body": "Hi {author},\n\nI hope you've been doing well! I just wanted to follow up and see if you received the refund I processed for you. Please let me know if there are any issues; I'm here to help if you need anything further.\n\nIf you did receive the refund, I'd also appreciate it if you could update or consider deleting your Trustpilot review at your convenience. Here's the link: {review_link}\n\nOf course, it's entirely up to you — no pressure, but it would mean a lot to us.\n\nThank you again for your time, and please let me know if there's anything else I can do to assist.\n\nTake care,\n{sender_name}"
+    }
+  }
+}

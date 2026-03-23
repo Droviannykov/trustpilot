@@ -1,6 +1,6 @@
 # Trustpilot Review Automation
 
-Automated Trustpilot review management for Epica Beauty. Replies to reviews, requests reviewer emails, sends refund emails, and follows up — all on a schedule.
+Automated Trustpilot review management. Replies to reviews, requests reviewer emails, sends refund emails, and follows up — all on a schedule. Business-specific text lives in a single `business_config.json` file, so the same code works for any Trustpilot business page.
 
 ## How it works
 
@@ -16,6 +16,8 @@ pip install requests python-dotenv gspread google-auth certifi
 ```
 
 Create a `.env` file with your credentials (see `CLAUDE.md` for the full list).
+
+Copy `business_config.example.json` to `business_config.json` and edit the business name, emails, and templates for your business.
 
 ## Usage
 

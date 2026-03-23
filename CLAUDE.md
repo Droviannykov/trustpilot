@@ -9,16 +9,16 @@ Automated Trustpilot review management for Epica Beauty. Both scripts run unatte
 
 | File                        | Purpose                                                                        |
 | --------------------------- | ------------------------------------------------------------------------------ |
-| `trustpilot_replies.py`     | Auto-reply to unanswered reviews + handle negative review flow                 |
-| `check_pending_contacts.py` | Poll Find Reviewer requests, send refund emails, send follow-ups               |
-| `reply_templates.json`      | Public reply templates posted on Trustpilot (editable without code changes)    |
-| `email_templates.json`      | Email templates: refund confirmation and follow-up refund                      |
-| `pending_contacts.json`     | Auto-generated; tracks pending/resolved Find Reviewer requests and email state |
-| `sheets.py`                 | Google Sheets integration — updates tracking spreadsheet and Refunds tab       |
-| `logic.md`                  | Business logic overview                                                        |
-| `google_credentials.json`   | Google service account credentials (never commit)                              |
-| `.env`                      | API credentials (never commit)                                                 |
-| `.gitignore`                | Excludes `.env` and `*.json` from git                                          |
+| `trustpilot_replies.py`        | Auto-reply to unanswered reviews + handle negative review flow                 |
+| `check_pending_contacts.py`    | Poll Find Reviewer requests, send refund emails, send follow-ups               |
+| `config.py`                    | Loads `business_config.json`, provides helpers for templates and business vars  |
+| `business_config.json`         | All business-specific text: templates, names, emails (never commit)            |
+| `business_config.example.json` | Committed example config — copy to `business_config.json` for new deployments  |
+| `pending_contacts.json`        | Auto-generated; tracks pending/resolved Find Reviewer requests and email state |
+| `sheets.py`                    | Google Sheets integration — updates tracking spreadsheet and Refunds tab       |
+| `google_credentials.json`      | Google service account credentials (never commit)                              |
+| `.env`                         | API credentials (never commit)                                                 |
+| `.gitignore`                   | Excludes `.env`, `business_config.json`, and other secrets from git            |
 
 
 ## Credentials (`.env`)

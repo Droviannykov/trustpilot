@@ -3,5 +3,6 @@
 mock/
 google_credentials.json
 pending_contacts.json
+business_config.json
 __pycache__/
 *.pyc

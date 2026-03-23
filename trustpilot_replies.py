@@ -17,6 +17,7 @@ from datetime import datetime, timezone
 import requests
 from dotenv import load_dotenv
 import sheets
+import config
 
 # Load credentials from .env file
 load_dotenv()
@@ -29,10 +30,6 @@ BUSINESS_UNIT_ID = os.getenv("TRUSTPILOT_BUSINESS_UNIT_ID")
 AUTHOR_BUSINESS_USER_ID = os.getenv("TRUSTPILOT_AUTHOR_BUSINESS_USER_ID")
 BASE_URL = "https://api.trustpilot.com"
 
-# Path to the JSON file containing reply templates (editable without touching this script)
-TEMPLATES_FILE = os.path.join(os.path.dirname(__file__), "reply_templates.json")
-# Path to the email templates file (subject, body, find-reviewer message)
-EMAIL_TEMPLATES_FILE = os.path.join(os.path.dirname(__file__), "email_templates.json")
 # Path to the file that tracks pending Find Reviewer requests awaiting reviewer response
 PENDING_CONTACTS_FILE = os.path.join(os.path.dirname(__file__), "pending_contacts.json")
 
@@ -67,20 +64,6 @@ def get_unanswered_reviews(token):
     # Sort oldest first so we always handle reviews in chronological order
     reviews.sort(key=lambda r: r.get("createdAt", ""))
     return reviews
-
-
-def load_templates():
-    # Load reply templates from the JSON file
-    with open(TEMPLATES_FILE) as f:
-        return json.load(f)
-
-
-def get_reply_text(stars, templates):
-    # Match the review's star rating to the correct template (positive or negative)
-    for key in ("positive", "negative"):
-        if stars in templates[key]["stars"]:
-            return templates[key]["text"]
-    return None
 
 
 def post_reply(token, review_id, message):
@@ -170,7 +153,6 @@ def main():
         print("No unanswered reviews found.")
         return
 
-    templates = load_templates()
     print(f"\nFound {len(reviews)} unanswered review(s).\n")
 
     for review in reviews:
@@ -179,7 +161,7 @@ def main():
         author = review.get("consumer", {}).get("displayName", "Unknown")
         title = review.get("title", "(no title)")
         body = review.get("text", "(no body)")
-        reply_text = get_reply_text(stars, templates)
+        reply_text = config.get_reply_text(stars)
 
         print("=" * 60)
         print(f"Author : {author}")
@@ -216,7 +198,7 @@ def main():
                 find_reviewer = review.get("findReviewer", {})
                 if find_reviewer.get("isEligible"):
                     try:
-                        find_reviewer_message = "Hi, we're sorry to hear about your experience with Epica Beauty. We'd love to reach out directly to make things right — would you be willing to share your contact details with us?"
+                        find_reviewer_message = config.get_find_reviewer_message()
                         submit_find_reviewer(token, review_id, find_reviewer_message)
                         review_data = requests.get(
                             f"{BASE_URL}/v1/private/reviews/{review_id}",
