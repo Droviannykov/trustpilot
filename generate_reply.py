@@ -5,6 +5,7 @@ Falls back to template replies if the API call fails.
 """
 
 import os
+import random
 import anthropic
 from dotenv import load_dotenv
 import config
@@ -12,6 +13,17 @@ import config
 load_dotenv()
 
 client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+
+# Each call picks a random writing style to force genuine variety between replies.
+WRITING_STYLES = [
+    "Write in a warm, conversational tone. Short sentences. Like texting a friend you respect.",
+    "Write in a calm, thoughtful tone. Measured and sincere. No exclamation marks.",
+    "Write with enthusiasm and energy. You're genuinely excited by what they shared.",
+    "Write in a direct, no-fluff style. Friendly but efficient. Get to the point fast.",
+    "Write with a storytelling touch. Connect what they said to something bigger or share a behind-the-scenes detail.",
+    "Write casually and playfully. Light humor is OK. Keep it natural and relaxed.",
+    "Write with quiet confidence. Reassuring and steady. Like a friend who knows what they're doing.",
+]
 
 SYSTEM_PROMPT = """You are a customer support representative for {business_name}, {product_description}. You write public replies to Trustpilot reviews.
 
@@ -104,7 +116,8 @@ def generate_reply(author, stars, title, review_text):
             ),
         })
 
-    user_message = f"Author: {author}\nStars: {stars}\nTitle: {title}\nReview: {review_text}"
+    style = random.choice(WRITING_STYLES)
+    user_message = f"Writing style for this reply: {style}\n\nAuthor: {author}\nStars: {stars}\nTitle: {title}\nReview: {review_text}"
 
     try:
         response = client.messages.create(
